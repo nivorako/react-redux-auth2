@@ -1,9 +1,29 @@
-import React, {useContext} from 'react'
+import React, {useContext, useEffect, useRef, useState} from 'react'
 import { UserContext } from '../context/UserContext'
 
 export function SignUpModal() {
 
     const { modalState, toggleModals} = useContext(UserContext)
+    const [validation, setValidation] = useState("")
+    const inputs = useRef([])
+    const addInputs = el => {
+        if(el && !inputs.current.includes(el)) {
+            inputs.current.push(el)
+        }
+    }
+
+    const handleForm = e => {
+        e.preventDefault()
+        //console.log(inputs)
+
+        if((inputs.current[1].value.length || inputs.current[2].value.length) < 6){
+            setValidation("Six characters min")
+            return
+        }else if(inputs.current[1].value.length !== inputs.current[2].value.length){
+            setValidation('Password do not match')
+        }
+       
+    }
 
     return(
         <>
@@ -24,12 +44,16 @@ export function SignUpModal() {
                                     <button className='btn-close' onClick={() => toggleModals("close")}></button>
                                 </div>
                                 <div className='modal-body'>
-                                    <form className='sign-up-form'>
+                                    <form className='sign-up-form' onSubmit={handleForm}>
                                         <div className='mb-3 d-flex flex-column' >
-                                            <label htmlFor='signUpEmail' className='form-label'>
+                                            <label 
+                                                htmlFor='signUpEmail' 
+                                                className='form-label'
+                                            >
                                                 Email adress
                                             </label>
                                             <input 
+                                                ref={addInputs}
                                                 required
                                                 name='email'
                                                 type='email'
@@ -43,6 +67,7 @@ export function SignUpModal() {
                                                 Password
                                             </label>
                                             <input 
+                                                ref={addInputs}
                                                 required
                                                 name='pwd'
                                                 type='password'
@@ -55,14 +80,17 @@ export function SignUpModal() {
                                             <label htmlFor='repeatPwd' className='form-label'>
                                                 Repeat Password
                                             </label>
-                                            <input 
+                                            <input
+                                                ref={addInputs} 
                                                 required
                                                 name='pwd'
                                                 type='password'
                                                 className='form-controll'
                                                 id='repeatPwd'
                                             />
-                                            <p className='text-danger mt-1'></p>
+                                            <p className='text-danger mt-1'>
+                                                {validation}
+                                            </p>
                                         </div>
                                         <button className='btn btn-primary'>Submit</button>
                                     </form>

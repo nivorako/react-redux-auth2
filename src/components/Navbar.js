@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom'
 import { UserContext } from '../context/UserContext'
 
 export default function Navbar() {
+
     const {toggleModals} = useContext(UserContext)
+    
     return(
         <nav className='navbar navbar-light bg-light px-4'>
             <Link 
